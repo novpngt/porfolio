@@ -5,6 +5,47 @@ import { Github, Linkedin, Mail, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTypewriter } from "@/app/hooks/useTypewriter";
 
+function FloatingPaths({ position }: { position: number }) {
+  const paths = Array.from({ length: 36 }, (_, i) => ({
+    id: i,
+    d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${380 - i * 5 * position} -${189 + i * 6} -${
+      312 - i * 5 * position
+    } ${216 - i * 6} ${152 - i * 5 * position} ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${
+      684 - i * 5 * position
+    } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
+    color: `rgba(15,23,42,${0.1 + i * 0.03})`,
+    width: 0.5 + i * 0.03,
+  }));
+
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      <svg className="w-full h-full text-blue-500 dark:text-blue-100" viewBox="0 0 696 316" fill="none">
+        <title>Background Paths</title>
+        {paths.map((path) => (
+          <motion.path
+            key={path.id}
+            d={path.d}
+            stroke="currentColor"
+            strokeWidth={path.width}
+            strokeOpacity={path.id * 0.01}
+            initial={{ pathLength: 0.3, opacity: 0.6 }}
+            animate={{
+              pathLength: 1,
+              opacity: [0.3, 0.6, 0.3],
+              pathOffset: [0, 1, 0],
+            }}
+            transition={{
+              duration: 20 + Math.random() * 10,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            }}
+          />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
 export default function Hero() {
   const { displayText: nameText, isDone: nameTyped } = useTypewriter("Nguyen Thanh Phong", 100, 500);
 
@@ -26,6 +67,10 @@ function Developer() {
 
   return (
     <div className="relative isolate overflow-hidden bg-background min-h-[80vh] flex items-center">
+      <div className="absolute inset-0 -z-50">
+        <FloatingPaths position={1} />
+        <FloatingPaths position={-1} />
+      </div>
       <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-10 lg:px-8 lg:py-40">
         <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0">
           <motion.div initial={{ opacity: 1 }}>
@@ -68,11 +113,7 @@ function Developer() {
               <a href="#contact">Contact Me</a>
             </Button>
             <Button variant="outline" asChild>
-              <a
-                href="https://drive.google.com/file/d/1788cnk425IYo2HMxkTsj8HIQHAolEJkl/view?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://drive.google.com/file/d/1788cnk425IYo2HMxkTsj8HIQHAolEJkl/view?usp=sharing">
                 <Download className="mr-2 h-4 w-4" />
                 Resume
               </a>

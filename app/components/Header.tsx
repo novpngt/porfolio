@@ -1,21 +1,56 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { useTheme } from "next-themes"
-import { motion } from "framer-motion"
-import { MoonIcon, SunIcon, Menu, X } from "lucide-react"
-import AnimatedLogo from "./AnimatedLogo"
-import { AnimatePresence } from "framer-motion"
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { useTheme } from "next-themes";
+import { motion } from "framer-motion";
+import { MoonIcon, SunIcon, Menu, X } from "lucide-react";
+import AnimatedLogo from "./AnimatedLogo";
+import { AnimatePresence } from "framer-motion";
 
 export default function Header() {
-  const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const observerRefs = useRef<IntersectionObserver[]>([]);
 
-  useEffect(() => setMounted(true), [])
+  useEffect(() => setMounted(true), []);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  // Set up intersection observers for each section
+  useEffect(() => {
+    // Clean up previous observers
+    observerRefs.current.forEach((observer) => observer.disconnect());
+    observerRefs.current = [];
+
+    const sections = menuItems.map((item) => item.href.replace("#", ""));
+
+    sections.forEach((section) => {
+      const element = document.getElementById(section);
+      if (!element) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            // When section is in view with at least 40% visibility
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
+              setActiveSection(section);
+            }
+          });
+        },
+        { threshold: [0.4] } // Trigger when 40% of the element is visible
+      );
+
+      observer.observe(element);
+      observerRefs.current.push(observer);
+    });
+
+    return () => {
+      observerRefs.current.forEach((observer) => observer.disconnect());
+    };
+  }, []);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const menuItems = [
     { name: "About", href: "#about" },
@@ -24,11 +59,11 @@ export default function Header() {
     { name: "Projects", href: "#projects" },
     { name: "Education", href: "#education" },
     { name: "Contact", href: "#contact" },
-  ]
+  ];
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
-  }
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
     <motion.header
@@ -61,13 +96,25 @@ export default function Header() {
         {/* Desktop menu */}
         <div className="hidden lg:flex lg:gap-x-8">
           {menuItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors"
-            >
-              {item.name}
-            </Link>
+            <div key={item.name} className="relative">
+              <Link
+                href={item.href}
+                className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors"
+              >
+                {item.name}
+              </Link>
+
+              {/* Animated indicator - underline style */}
+              {activeSection === item.href.replace("#", "") && (
+                <motion.div
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
+                  layoutId="activeSection"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </div>
           ))}
         </div>
 
@@ -118,14 +165,28 @@ export default function Header() {
           >
             <div className="space-y-1 px-4 pb-3 pt-2">
               {menuItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-primary/10 hover:text-primary"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
+                <div key={item.name} className="relative">
+                  <Link
+                    href={item.href}
+                    className="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-primary/10 hover:text-primary"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="flex items-center">
+                      {item.name}
+
+                      {/* Animated indicator - dot style for mobile */}
+                      {activeSection === item.href.replace("#", "") && (
+                        <motion.div
+                          className="ml-2 h-1.5 w-1.5 rounded-full bg-primary"
+                          layoutId="activeSectionMobile"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                    </div>
+                  </Link>
+                </div>
               ))}
               {mounted && (
                 <button
@@ -141,5 +202,5 @@ export default function Header() {
         )}
       </AnimatePresence>
     </motion.header>
-  )
+  );
 }
