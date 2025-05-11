@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
@@ -13,44 +15,9 @@ export default function Header() {
   const { theme, setTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-  const observerRefs = useRef<IntersectionObserver[]>([]);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => setMounted(true), []);
-
-  // Set up intersection observers for each section
-  useEffect(() => {
-    // Clean up previous observers
-    observerRefs.current.forEach((observer) => observer.disconnect());
-    observerRefs.current = [];
-
-    const sections = menuItems.map((item) => item.href.replace("#", ""));
-
-    sections.forEach((section) => {
-      const element = document.getElementById(section);
-      if (!element) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            // When section is in view with at least 40% visibility
-            if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
-              setActiveSection(section);
-            }
-          });
-        },
-        { threshold: [0.4] } // Trigger when 40% of the element is visible
-      );
-
-      observer.observe(element);
-      observerRefs.current.push(observer);
-    });
-
-    return () => {
-      observerRefs.current.forEach((observer) => observer.disconnect());
-    };
-  }, []);
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const menuItems = [
     { name: "About", href: "#about" },
@@ -61,12 +28,102 @@ export default function Header() {
     { name: "Contact", href: "#contact" },
   ];
 
+  // Set up scroll event listener instead of Intersection Observer
+  useEffect(() => {
+    const handleScroll = () => {
+      // Get all section elements
+      const sections = menuItems
+        .map((item) => {
+          const id = item.href.replace("#", "");
+          return document.getElementById(id);
+        })
+        .filter(Boolean) as HTMLElement[];
+
+      if (sections.length === 0) return;
+
+      // Get current scroll position
+      const scrollY = window.scrollY;
+
+      // Get header height for offset calculation (if header is fixed)
+      const headerHeight = headerRef.current?.offsetHeight || 0;
+
+      // Find the current section
+      let current = "";
+
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop - headerHeight - 100; // 100px offset for better UX
+        const sectionHeight = section.offsetHeight;
+
+        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+          current = section.id;
+        }
+      });
+
+      // Special case for last section when scrolled to bottom
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollPosition = window.innerHeight + scrollY;
+
+      // If we're at the bottom of the page, activate the last section
+      if (scrollPosition >= scrollHeight - 50) {
+        const lastSection = sections[sections.length - 1];
+        if (lastSection) {
+          current = lastSection.id;
+        }
+      }
+
+      setActiveSection(current);
+    };
+
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll);
+
+    // Call once on mount to set initial active section
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [menuItems]);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
+  // Handle smooth scrolling when clicking on navigation links
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace("#", "");
+    const element = document.getElementById(targetId);
+
+    if (element) {
+      // Close mobile menu if open
+      if (isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+
+      // Get header height for offset
+      const headerHeight = headerRef.current?.offsetHeight || 0;
+
+      // Calculate position to scroll to
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerHeight;
+
+      // Smooth scroll to element
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+
+      // Update active section
+      setActiveSection(targetId);
+    }
+  };
+
   return (
     <motion.header
+      ref={headerRef}
       className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -99,7 +156,10 @@ export default function Header() {
             <div key={item.name} className="relative">
               <Link
                 href={item.href}
-                className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors"
+                className={`text-sm font-semibold leading-6 transition-colors ${
+                  activeSection === item.href.replace("#", "") ? "text-primary" : "text-foreground hover:text-primary"
+                }`}
+                onClick={(e) => handleNavClick(e, item.href)}
               >
                 {item.name}
               </Link>
@@ -168,8 +228,12 @@ export default function Header() {
                 <div key={item.name} className="relative">
                   <Link
                     href={item.href}
-                    className="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-primary/10 hover:text-primary"
-                    onClick={() => setIsMenuOpen(false)}
+                    className={`block rounded-md px-3 py-2 text-base font-medium ${
+                      activeSection === item.href.replace("#", "")
+                        ? "text-primary bg-primary/10"
+                        : "text-foreground hover:bg-primary/10 hover:text-primary"
+                    }`}
+                    onClick={(e) => handleNavClick(e, item.href)}
                   >
                     <div className="flex items-center">
                       {item.name}
