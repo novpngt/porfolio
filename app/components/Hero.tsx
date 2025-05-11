@@ -1,12 +1,28 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Github, Linkedin, Mail, Download } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useTypewriter } from "@/app/hooks/useTypewriter"
+import { motion } from "framer-motion";
+import { Github, Linkedin, Mail, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTypewriter } from "@/app/hooks/useTypewriter";
 
 export default function Hero() {
-  const { displayText: nameText, isDone: nameTyped } = useTypewriter("Nguyen Thanh Phong", 100, 500)
+  const { displayText: nameText, isDone: nameTyped } = useTypewriter("Nguyen Thanh Phong", 100, 500);
+
+  const developerCode = `
+function Developer() {
+  const [skills, setSkills] = useState([
+    'Java', 'PHP', 'JavaScript',
+    'Spring Boot', 'Laravel', 'React'
+  ]);
+  
+  return (
+    <PassionateDeveloper 
+      name="Nguyen Thanh Phong"
+      skills={skills}
+    />
+  );
+}
+`;
 
   return (
     <div className="relative isolate overflow-hidden bg-background min-h-[80vh] flex items-center">
@@ -52,7 +68,11 @@ export default function Hero() {
               <a href="#contact">Contact Me</a>
             </Button>
             <Button variant="outline" asChild>
-              <a href="/resume.pdf" download>
+              <a
+                href="https://drive.google.com/file/d/1788cnk425IYo2HMxkTsj8HIQHAolEJkl/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Download className="mr-2 h-4 w-4" />
                 Resume
               </a>
@@ -103,21 +123,7 @@ export default function Hero() {
             <div className="relative h-[350px] w-[350px] sm:h-[450px] sm:w-[450px] rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 p-8 flex items-center justify-center backdrop-blur-sm">
               <div className="absolute inset-0 flex items-center justify-center">
                 <code className="text-sm sm:text-base text-primary/70 font-mono">
-                  <pre className="whitespace-pre-wrap">
-                    {`function Developer() {
-  const [skills, setSkills] = useState([
-    'Java', 'PHP', 'JavaScript',
-    'Spring Boot', 'Laravel', 'React'
-  ]);
-  
-  return (
-    <PassionateDeveloper 
-      name="Nguyen Thanh Phong"
-      skills={skills}
-    />
-  );
-}`}
-                  </pre>
+                  <pre className="whitespace-pre-wrap">{developerCode}</pre>
                 </code>
               </div>
             </div>
@@ -125,5 +131,5 @@ export default function Hero() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }
