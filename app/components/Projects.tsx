@@ -3,16 +3,34 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, ExternalLink, X } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useInView } from "framer-motion";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Projects() {
   const projectRef = useRef(null);
   const placeholderRef = useRef(null);
   const projectIsInView = useInView(projectRef, { once: false, amount: 0.3 });
   const placeholderIsInView = useInView(placeholderRef, { once: false, amount: 0.3 });
+  const isMobile = useIsMobile();
 
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  const [autoSlide, setAutoSlide] = useState(true);
+  const [api, setApi] = useState<any>(null);
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    if (!api || !autoSlide || isHovering) return;
+
+    // Set up interval for auto-sliding
+    const interval = setInterval(() => {
+      api.scrollNext();
+    }, 3000); // Slides every 3 seconds
+
+    // Clean up interval on component unmount or when autoSlide is disabled
+    return () => clearInterval(interval);
+  }, [api, autoSlide, isHovering]);
 
   const projects = [
     {
@@ -35,7 +53,7 @@ export default function Projects() {
       id: 2,
       title: "ECLO Entertainment Business Management",
       description:
-        "A convenient software solution for businesses operating billiards and karaoke services, digitizing their operations. This application is part of ECLO Co., Ltd’s system.",
+        "A convenient software solution for businesses operating billiards and karaoke services, digitizing their operations. This application is part of ECLO Co., Ltd's system.",
       role: "Fullstack Developer Intern",
       responsibilities: [
         "Developed RESTful API endpoints using Laravel",
@@ -84,117 +102,139 @@ export default function Projects() {
           Projects
         </motion.h2>
 
-        {/* Hiển thị danh sách các project */}
         <motion.div
-          className="grid md:grid-cols-2 gap-8"
+          ref={projectRef}
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={projectIsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.2 }}
+          className="w-full"
         >
-          {projects.map((project) => (
-            <motion.div
-              key={project.id}
-              ref={projectRef}
-              initial={{ opacity: 0, y: 20 }}
-              animate={projectIsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.5 }}
-              className="bg-background rounded-lg overflow-hidden shadow-sm border border-border cursor-pointer transform-gpu"
-              whileHover={{
-                y: -5,
-                scale: 1.02,
-                boxShadow: "0 10px 30px -15px rgba(0, 0, 0, 0.2)",
-                transition: { duration: 0.3 },
-              }}
-              onClick={() => handleProjectClick(project.id)}
-            >
-              <div className="relative h-64">
-                <Image src={project.image} alt={project.title} layout="fill" objectFit="cover" />
+          <Carousel
+            className="w-full"
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            setApi={setApi}
+          >
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {projects.map((project) => (
+                <CarouselItem key={project.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/2">
+                  <motion.div
+                    className="h-full bg-background rounded-lg overflow-hidden shadow-sm border border-border cursor-pointer transform-gpu"
+                    whileHover={{
+                      y: -5,
+                      scale: 1.02,
+                      boxShadow: "0 10px 30px -15px rgba(0, 0, 0, 0.2)",
+                      transition: { duration: 0.3 },
+                    }}
+                    onClick={() => handleProjectClick(project.id)}
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={() => setIsHovering(false)}
+                  >
+                    <div className="relative h-64">
+                      <Image
+                        src={project.image || "/placeholder.svg"}
+                        alt={project.title}
+                        fill
+                        className="object-cover"
+                      />
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <div className="text-white">
+                          <h3 className="text-xl font-bold">{project.title}</h3>
+                          <p className="text-sm mt-2">Click to view details</p>
+                        </div>
+                      </motion.div>
+                    </div>
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <h3 className="text-xl font-bold text-foreground">{project.title}</h3>
+                        <div className="flex space-x-2">
+                          <a
+                            href={project.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Github className="h-5 w-5" />
+                          </a>
+                          <a
+                            href={project.demo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <ExternalLink className="h-5 w-5" />
+                          </a>
+                        </div>
+                      </div>
+
+                      <p className="text-muted-foreground mb-4 line-clamp-2">{project.description}</p>
+
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {project.technologies.map((tech, index) => (
+                          <span key={index} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                </CarouselItem>
+              ))}
+
+              <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/2">
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
+                  ref={placeholderRef}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={placeholderIsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="h-full bg-background rounded-lg overflow-hidden shadow-sm border border-border flex items-center justify-center p-8 transform-gpu"
+                  whileHover={{
+                    y: -5,
+                    scale: 1.02,
+                    boxShadow: "0 10px 30px -15px rgba(0, 0, 0, 0.2)",
+                    transition: { duration: 0.3 },
+                  }}
+                  onMouseEnter={() => setIsHovering(true)}
+                  onMouseLeave={() => setIsHovering(false)}
                 >
-                  <div className="text-white">
-                    <h3 className="text-xl font-bold">{project.title}</h3>
-                    <p className="text-sm mt-2">Click to view details</p>
+                  <div className="text-center">
+                    <h3 className="text-xl font-bold text-foreground mb-4">More Projects Coming Soon</h3>
+                    <p className="text-muted-foreground">
+                      I'm constantly working on new projects. Check back soon or visit my GitHub for updates.
+                    </p>
+                    <div className="mt-6">
+                      <a
+                        href="https://github.com/novpngt"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center text-primary hover:underline"
+                      >
+                        <Github className="mr-2 h-5 w-5" />
+                        Visit My GitHub
+                      </a>
+                    </div>
                   </div>
                 </motion.div>
-              </div>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-bold text-foreground">{project.title}</h3>
-                  <div className="flex space-x-2">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Github className="h-5 w-5" />
-                      <span className="sr-only">GitHub</span>
-                    </a>
-                    <a
-                      href={project.demo}
-                      className="text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <ExternalLink className="h-5 w-5" />
-                      <span className="sr-only">Live Demo</span>
-                    </a>
-                  </div>
-                </div>
+              </CarouselItem>
+            </CarouselContent>
 
-                <p className="text-muted-foreground mb-4 line-clamp-2">{project.description}</p>
-
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {project.technologies.map((tech, index) => (
-                    <span key={index} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-
-          {/* Placeholder for future projects */}
-          <motion.div
-            ref={placeholderRef}
-            initial={{ opacity: 0, y: 20 }}
-            animate={placeholderIsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-background rounded-lg overflow-hidden shadow-sm border border-border flex items-center justify-center p-8 transform-gpu"
-            whileHover={{
-              y: -5,
-              scale: 1.02,
-              boxShadow: "0 10px 30px -15px rgba(0, 0, 0, 0.2)",
-              transition: { duration: 0.3 },
-            }}
-          >
-            <div className="text-center">
-              <h3 className="text-xl font-bold text-foreground mb-4">More Projects Coming Soon</h3>
-              <p className="text-muted-foreground">
-                I'm constantly working on new projects. Check back soon or visit my GitHub for updates.
-              </p>
-              <div className="mt-6">
-                <a
-                  href="https://github.com/novpngt"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-primary hover:underline"
-                >
-                  <Github className="mr-2 h-5 w-5" />
-                  Visit My GitHub
-                </a>
-              </div>
+            <div className="flex justify-center mt-8">
+              <CarouselPrevious className="relative mr-4 static translate-y-0" />
+              <CarouselNext className="relative ml-4 static translate-y-0" />
             </div>
-          </motion.div>
+          </Carousel>
         </motion.div>
       </div>
 
-      {/* Project Detail Modal */}
       <AnimatePresence>
         {selectedProject !== null && selectedProjectData && (
           <motion.div
@@ -217,9 +257,8 @@ export default function Projects() {
                   <Image
                     src={selectedProjectData.image || "/placeholder.svg"}
                     alt={selectedProjectData.title}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-t-xl"
+                    fill
+                    className="object-cover rounded-t-xl"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                   <button
@@ -262,14 +301,16 @@ export default function Projects() {
                     <p className="text-muted-foreground">{selectedProjectData.role}</p>
                   </div>
 
-                  <div className="mb-6">
-                    <h4 className="text-lg font-semibold text-foreground mb-2">Responsibilities:</h4>
-                    <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                      {selectedProjectData.responsibilities.map((item, index) => (
-                        <li key={index}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
+                  {selectedProjectData.responsibilities.length > 0 && (
+                    <div className="mb-6">
+                      <h4 className="text-lg font-semibold text-foreground mb-2">Responsibilities:</h4>
+                      <ul className="list-disc list-inside text-muted-foreground space-y-1">
+                        {selectedProjectData.responsibilities.map((item, index) => (
+                          <li key={index}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
                   <h4 className="text-lg font-semibold text-foreground mb-2">Technologies Used:</h4>
                   <div className="flex flex-wrap gap-2">
