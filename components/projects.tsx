@@ -26,8 +26,8 @@ export function Projects() {
       description:
         "A clean, responsive portfolio website built with modern web technologies and featuring a minimalist black and white design with dark mode support.",
       tags: ["Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui"],
-      demoUrl: "#",
-      repoUrl: "#",
+      demoUrl: "www.novpngt.site",
+      repoUrl: "https://github.com/novpngt/porfolio",
     },
   ]
 
