@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CalendarIcon } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CalendarIcon } from "lucide-react";
 
 export function Education() {
   return (
@@ -24,17 +24,12 @@ export function Education() {
                 </div>
               </div>
               <div className="mt-2">
-                <p>GPA: 2.89</p>
-                <p className="mt-2">
-                  Studying software engineering with a focus on web development and database management. Coursework
-                  includes programming fundamentals, data structures, algorithms, software design, and web application
-                  development.
-                </p>
+                <p className="mt-2">Studying software engineering with a focus on web development and database management. Coursework includes programming fundamentals, data structures, algorithms, software design, and web application development.</p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
     </section>
-  )
+  );
 }
