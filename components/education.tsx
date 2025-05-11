@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarIcon } from "lucide-react";
+import BlurText from "@/components/ui/blur-text";
 
 export function Education() {
   return (
@@ -24,7 +25,8 @@ export function Education() {
                 </div>
               </div>
               <div className="mt-2">
-                <p className="mt-2">Studying software engineering with a focus on web development and database management. Coursework includes programming fundamentals, data structures, algorithms, software design, and web application development.</p>
+                <BlurText text="Studying software engineering with a focus on web development and database management. Coursework includes programming fundamentals, data structures, algorithms, software design, and web application development." delay={5} animateBy="words" direction="top" />
+                <p className="mt-2"></p>
               </div>
             </div>
           </CardContent>
