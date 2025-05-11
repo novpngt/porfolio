@@ -19,27 +19,51 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <button onClick={() => scrollToSection("top")} className="font-bold text-xl cursor-pointer">
-          PORTFOLIO
+          <a href="https://git.io/typing-svg">
+            <img
+              align="center"
+              src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&random=false&width=435&lines=I+am+from+Vietnam+<3;Have+a+nice+day!"
+              alt="Typing SVG"
+            />
+          </a>
         </button>
 
         <div className="hidden md:flex items-center gap-6">
           <nav className="flex gap-6">
-            <button onClick={() => handleNavClick("about")} className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg">
+            <button
+              onClick={() => handleNavClick("about")}
+              className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg"
+            >
               About
             </button>
-            <button onClick={() => handleNavClick("education")} className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg">
+            <button
+              onClick={() => handleNavClick("education")}
+              className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg"
+            >
               Education
             </button>
-            <button onClick={() => handleNavClick("experience")} className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg">
+            <button
+              onClick={() => handleNavClick("experience")}
+              className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg"
+            >
               Experience
             </button>
-            <button onClick={() => handleNavClick("projects")} className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg">
+            <button
+              onClick={() => handleNavClick("projects")}
+              className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg"
+            >
               Projects
             </button>
-            <button onClick={() => handleNavClick("skills")} className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg">
+            <button
+              onClick={() => handleNavClick("skills")}
+              className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg"
+            >
               Skills
             </button>
-            <button onClick={() => handleNavClick("contact")} className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg">
+            <button
+              onClick={() => handleNavClick("contact")}
+              className="text-sm font-medium transition-transform transform hover:scale-125 hover:text-primary hover:text-shadow-lg"
+            >
               Contact
             </button>
           </nav>
@@ -54,22 +78,40 @@ export function Header() {
         {isMenuOpen && (
           <div className="absolute top-16 left-0 right-0 bg-background border-b border-border z-50 md:hidden">
             <nav className="flex flex-col p-4 gap-4">
-              <button onClick={() => handleNavClick("about")} className="text-sm font-medium transition-colors hover:text-primary text-left">
+              <button
+                onClick={() => handleNavClick("about")}
+                className="text-sm font-medium transition-colors hover:text-primary text-left"
+              >
                 About
               </button>
-              <button onClick={() => handleNavClick("education")} className="text-sm font-medium transition-colors hover:text-primary text-left">
+              <button
+                onClick={() => handleNavClick("education")}
+                className="text-sm font-medium transition-colors hover:text-primary text-left"
+              >
                 Education
               </button>
-              <button onClick={() => handleNavClick("experience")} className="text-sm font-medium transition-colors hover:text-primary text-left">
+              <button
+                onClick={() => handleNavClick("experience")}
+                className="text-sm font-medium transition-colors hover:text-primary text-left"
+              >
                 Experience
               </button>
-              <button onClick={() => handleNavClick("projects")} className="text-sm font-medium transition-colors hover:text-primary text-left">
+              <button
+                onClick={() => handleNavClick("projects")}
+                className="text-sm font-medium transition-colors hover:text-primary text-left"
+              >
                 Projects
               </button>
-              <button onClick={() => handleNavClick("skills")} className="text-sm font-medium transition-colors hover:text-primary text-left">
+              <button
+                onClick={() => handleNavClick("skills")}
+                className="text-sm font-medium transition-colors hover:text-primary text-left"
+              >
                 Skills
               </button>
-              <button onClick={() => handleNavClick("contact")} className="text-sm font-medium transition-colors hover:text-primary text-left">
+              <button
+                onClick={() => handleNavClick("contact")}
+                className="text-sm font-medium transition-colors hover:text-primary text-left"
+              >
                 Contact
               </button>
               <div className="flex justify-end">
