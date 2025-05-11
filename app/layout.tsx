@@ -1,27 +1,30 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import "./globals.css"
+import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
+import Header from "./components/Header"
+import Footer from "./components/Footer"
+import type React from "react"
 
 const inter = Inter({ subsets: ["latin"] })
 
-export const metadata: Metadata = {
-  title: "Nguyen Thanh Phong | Portfolio",
-  description: "Personal portfolio of Nguyen Thanh Phong, Software Developer",
+export const metadata = {
+  title: "Nguyen Thanh Phong | Software Developer",
+  description: "Portfolio of Nguyen Thanh Phong - Software Developer based in Ho Chi Minh, Vietnam",
     generator: 'v0.dev'
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
+      <body className={`${inter.className} min-h-screen bg-background text-foreground`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Header />
+          <main>{children}</main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

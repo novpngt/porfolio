@@ -1,39 +1,51 @@
-"use client";
+"use client"
 
-import { Header } from "@/components/header";
-import { Hero } from "@/components/hero";
-import { About } from "@/components/about";
-import { Education } from "@/components/education";
-import { Experience } from "@/components/experience";
-import { Projects } from "@/components/projects";
-import { Skills } from "@/components/skills";
-import { Contact } from "@/components/contact";
-import { Footer } from "@/components/footer";
-import { BackToTop } from "@/components/back-to-top";
-import AnimatedContent from "@/components/ui/animated-content";
-import ClickSpark from "@/components/ui/click-spark";
+import { useEffect, useState } from "react"
+import Hero from "./components/Hero"
+import About from "./components/About"
+import Skills from "./components/Skills"
+import Experience from "./components/Experience"
+import Projects from "./components/Projects"
+import Education from "./components/Education"
+import Contact from "./components/Contact"
+import FloatingActionButton from "./components/FloatingActionButton"
+import MouseTracker from "./components/MouseTracker"
+import LoadingScreen from "./components/LoadingScreen"
+import AnimatedBackground from "./components/AnimatedBackground"
 
 export default function Home() {
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    // Add no-transitions class to prevent transitions on page load
+    document.documentElement.classList.add("no-transitions")
+
+    // Remove the class after a short delay
+    const timeout = setTimeout(() => {
+      document.documentElement.classList.remove("no-transitions")
+      setIsLoaded(true)
+    }, 100)
+
+    return () => clearTimeout(timeout)
+  }, [])
+
   return (
-    <div id="top" className="min-h-screen bg-white dark:bg-[#3b3b3b]">
-      <ClickSpark sparkColor="#fff" sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
-        {" "}
-        <Header />
-        <main className="container mx-auto px-4 py-8 space-y-24">
+    <>
+      <LoadingScreen />
+      <AnimatedBackground />
+      {isLoaded && (
+        <>
           <Hero />
           <About />
-          <Education />
-
+          <Skills />
           <Experience />
           <Projects />
-          <AnimatedContent>
-            <Skills />
-          </AnimatedContent>
+          <Education />
           <Contact />
-        </main>
-        <Footer />
-        <BackToTop />
-      </ClickSpark>
-    </div>
-  );
+          <FloatingActionButton />
+          <MouseTracker />
+        </>
+      )}
+    </>
+  )
 }
