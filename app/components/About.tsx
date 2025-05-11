@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 
 export default function About() {
   return (
@@ -52,12 +52,12 @@ export default function About() {
             </p>
             <p className="text-muted-foreground">
               I'm constantly learning and exploring new technologies to enhance my skills and stay updated with industry
-              trends. I'm particularly interested in full-stack development and creating solutions that solve real-world
+              trends. I'm particularly interested in software development and creating solutions that solve real-world
               problems.
             </p>
           </motion.div>
         </div>
       </div>
     </section>
-  )
+  );
 }

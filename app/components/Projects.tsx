@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { motion, AnimatePresence } from "framer-motion"
-import { Github, ExternalLink, X } from "lucide-react"
-import Image from "next/image"
-import { useRef, useState } from "react"
-import { useInView } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion";
+import { Github, ExternalLink, X } from "lucide-react";
+import Image from "next/image";
+import { useRef, useState } from "react";
+import { useInView } from "framer-motion";
 
 export default function Projects() {
-  const projectRef = useRef(null)
-  const placeholderRef = useRef(null)
-  const projectIsInView = useInView(projectRef, { once: false, amount: 0.3 })
-  const placeholderIsInView = useInView(placeholderRef, { once: false, amount: 0.3 })
+  const projectRef = useRef(null);
+  const placeholderRef = useRef(null);
+  const projectIsInView = useInView(projectRef, { once: false, amount: 0.3 });
+  const placeholderIsInView = useInView(placeholderRef, { once: false, amount: 0.3 });
 
-  const [selectedProject, setSelectedProject] = useState<number | null>(null)
+  const [selectedProject, setSelectedProject] = useState<number | null>(null);
 
   const projects = [
     {
@@ -20,7 +20,7 @@ export default function Projects() {
       title: "J2WatchSGU - Online Watch Store",
       description:
         "A web-based system for managing an online watch store, including user shopping features and admin tools for product, order, and sales management.",
-      role: "Backend Developer",
+      role: "Fullstack Developer",
       responsibilities: [
         "Designed the database schema to align with business requirements",
         "Deployed the DBMS on Google Cloud Platform (GCP)",
@@ -31,19 +31,46 @@ export default function Projects() {
       github: "https://github.com/novpngt/j2watchsgu",
       demo: "#",
     },
-  ]
+    {
+      id: 2,
+      title: "ECLO Entertainment Business Management",
+      description:
+        "A convenient software solution for businesses operating billiards and karaoke services, digitizing their operations. This application is part of ECLO Co., Ltd’s system.",
+      role: "Fullstack Developer Intern",
+      responsibilities: [
+        "Developed RESTful API endpoints using Laravel",
+        "Built frontend features using Next.js and Redux",
+        "Implemented modules for managing customer info, kitchen coordination, and equipment damage reports",
+      ],
+      technologies: ["Laravel", "Next.js", "Redux", "MySQL"],
+      image: "/placeholder.svg?height=600&width=800",
+      github: "#",
+      demo: "#",
+    },
+    {
+      id: 3,
+      title: "Portfolio Website",
+      description: "A simple portfolio website built with Next.js and Tailwind CSS.",
+      role: "Frontend Developer",
+      responsibilities: [],
+      technologies: ["TypeScript", "Nextjs", "v0", "Vercel"],
+      image: "/placeholder.svg?height=600&width=800",
+      github: "https://github.com/novpngt/portfolio",
+      demo: "#",
+    },
+  ];
 
   const handleProjectClick = (id: number) => {
-    setSelectedProject(id)
-    document.body.style.overflow = "hidden"
-  }
+    setSelectedProject(id);
+    document.body.style.overflow = "hidden";
+  };
 
   const closeProjectDetail = () => {
-    setSelectedProject(null)
-    document.body.style.overflow = "auto"
-  }
+    setSelectedProject(null);
+    document.body.style.overflow = "auto";
+  };
 
-  const selectedProjectData = selectedProject !== null ? projects.find((p) => p.id === selectedProject) : null
+  const selectedProjectData = selectedProject !== null ? projects.find((p) => p.id === selectedProject) : null;
 
   return (
     <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/20">
@@ -57,82 +84,80 @@ export default function Projects() {
           Projects
         </motion.h2>
 
+        {/* Hiển thị danh sách các project */}
         <motion.div
           className="grid md:grid-cols-2 gap-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <motion.div
-            ref={projectRef}
-            initial={{ opacity: 0, y: 20 }}
-            animate={projectIsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
-            className="bg-background rounded-lg overflow-hidden shadow-sm border border-border cursor-pointer transform-gpu"
-            whileHover={{
-              y: -5,
-              scale: 1.02,
-              boxShadow: "0 10px 30px -15px rgba(0, 0, 0, 0.2)",
-              transition: { duration: 0.3 },
-            }}
-            onClick={() => handleProjectClick(1)}
-          >
-            <div className="relative h-64">
-              <Image
-                src="/placeholder.svg?height=600&width=800"
-                alt="J2WatchSGU Project"
-                layout="fill"
-                objectFit="cover"
-              />
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="text-white">
-                  <h3 className="text-xl font-bold">J2WatchSGU - Online Watch Store</h3>
-                  <p className="text-sm mt-2">Click to view details</p>
+          {projects.map((project) => (
+            <motion.div
+              key={project.id}
+              ref={projectRef}
+              initial={{ opacity: 0, y: 20 }}
+              animate={projectIsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.5 }}
+              className="bg-background rounded-lg overflow-hidden shadow-sm border border-border cursor-pointer transform-gpu"
+              whileHover={{
+                y: -5,
+                scale: 1.02,
+                boxShadow: "0 10px 30px -15px rgba(0, 0, 0, 0.2)",
+                transition: { duration: 0.3 },
+              }}
+              onClick={() => handleProjectClick(project.id)}
+            >
+              <div className="relative h-64">
+                <Image src={project.image} alt={project.title} layout="fill" objectFit="cover" />
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="text-white">
+                    <h3 className="text-xl font-bold">{project.title}</h3>
+                    <p className="text-sm mt-2">Click to view details</p>
+                  </div>
+                </motion.div>
+              </div>
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-xl font-bold text-foreground">{project.title}</h3>
+                  <div className="flex space-x-2">
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Github className="h-5 w-5" />
+                      <span className="sr-only">GitHub</span>
+                    </a>
+                    <a
+                      href={project.demo}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <ExternalLink className="h-5 w-5" />
+                      <span className="sr-only">Live Demo</span>
+                    </a>
+                  </div>
                 </div>
-              </motion.div>
-            </div>
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-bold text-foreground">J2WatchSGU - Online Watch Store</h3>
-                <div className="flex space-x-2">
-                  <a
-                    href="https://github.com/novpngt/j2watchsgu"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Github className="h-5 w-5" />
-                    <span className="sr-only">GitHub</span>
-                  </a>
-                  <a
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ExternalLink className="h-5 w-5" />
-                    <span className="sr-only">Live Demo</span>
-                  </a>
+
+                <p className="text-muted-foreground mb-4 line-clamp-2">{project.description}</p>
+
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {project.technologies.map((tech, index) => (
+                    <span key={index} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                      {tech}
+                    </span>
+                  ))}
                 </div>
               </div>
-
-              <p className="text-muted-foreground mb-4 line-clamp-2">
-                A web-based system for managing an online watch store, including user shopping features and admin tools
-                for product, order, and sales management.
-              </p>
-
-              <div className="flex flex-wrap gap-2 mt-4">
-                <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Java Spring Boot</span>
-                <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">MySQL</span>
-                <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">GCP</span>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          ))}
 
           {/* Placeholder for future projects */}
           <motion.div
@@ -261,5 +286,5 @@ export default function Projects() {
         )}
       </AnimatePresence>
     </section>
-  )
+  );
 }

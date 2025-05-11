@@ -113,7 +113,11 @@ function Developer() {
               <a href="#contact">Contact Me</a>
             </Button>
             <Button variant="outline" asChild>
-              <a href="https://drive.google.com/file/d/1788cnk425IYo2HMxkTsj8HIQHAolEJkl/view?usp=sharing">
+              <a
+                href="https://drive.google.com/file/d/1788cnk425IYo2HMxkTsj8HIQHAolEJkl/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Download className="mr-2 h-4 w-4" />
                 Resume
               </a>
