@@ -134,7 +134,7 @@ export default function Header() {
           <Link href="/" className="-m-1.5 p-1.5 flex items-center">
             <span className="sr-only">Nguyen Thanh Phong</span>
             <AnimatedLogo />
-            <span className="ml-2 text-xl font-bold text-foreground">NTP</span>
+            <span className="ml-2 text-xl font-bold text-foreground">🇻🇳</span>
           </Link>
         </div>
 
