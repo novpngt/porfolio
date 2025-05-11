@@ -14,7 +14,7 @@ import AnimatedContent from "@/components/ui/animated-content";
 
 export default function Home() {
   return (
-    <div id="top" className="min-h-screen bg-white dark:bg-[#1a1a22]">
+    <div id="top" className="min-h-screen bg-white dark:bg-[#3b3b3b]">
       <Header />
       <main className="container mx-auto px-4 py-8 space-y-24">
         <Hero />
