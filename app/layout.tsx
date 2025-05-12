@@ -5,12 +5,16 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import type React from "react";
+import { url } from "inspector";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Nguyen Thanh Phong | Software Developer",
   description: "Portfolio of Nguyen Thanh Phong - Software Developer based in Ho Chi Minh, Vietnam",
+  icons: {
+    icon: "/public/logo.ico",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
