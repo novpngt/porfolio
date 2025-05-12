@@ -12,7 +12,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Mail, Phone, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
-import { loadEnvConfig } from "@next/env";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -36,7 +35,7 @@ export default function Contact() {
     axios
       .post(process.env.NEXT_PUBLIC_CONTACT_FORM_URL!, values, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "text/plain;charset=utf-8",
         },
       })
       .then((response) => {
