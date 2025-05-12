@@ -13,7 +13,7 @@ export const metadata = {
   title: "Nguyen Thanh Phong | Software Developer",
   description: "Portfolio of Nguyen Thanh Phong - Software Developer based in Ho Chi Minh, Vietnam",
   icons: {
-    icon: "/public/logo.ico",
+    icon: "/logo.ico",
   },
 };
 
