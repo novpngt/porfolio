@@ -99,7 +99,7 @@ function Developer() {
             animate={{ opacity: nameTyped ? 1 : 0, y: nameTyped ? 0 : 20 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            A passionate software developer specializing in full-stack development with experience in Java, PHP, and
+            A passionate software developer specializing in back-end development with experience in Java, PHP, and
             JavaScript frameworks. Based in Ho Chi Minh, Vietnam.
           </motion.p>
 

@@ -43,7 +43,7 @@ export default function About() {
             <h3 className="text-xl font-bold mb-4 text-foreground">Who I Am</h3>
             <p className="text-muted-foreground mb-4">
               I'm a software developer with a passion for building efficient, scalable, and user-friendly applications.
-              Currently pursuing my Bachelor's degree in Software Engineering at Saigon University, I combine academic
+              Recently completed my Bachelor's degree in Software Engineering at Saigon University, I combine academic
               knowledge with practical experience.
             </p>
             <p className="text-muted-foreground mb-4">
