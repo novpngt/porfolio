@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { motion, useInView } from "framer-motion"
-import { Code, Database, Server, Globe, Terminal, Cpu } from "lucide-react"
-import { useRef } from "react"
+import { motion, useInView } from "framer-motion";
+import { Code, Database, Server, Globe, Terminal, Languages } from "lucide-react";
+import { useRef } from "react";
 
 const skillCategories = [
   {
@@ -31,14 +31,14 @@ const skillCategories = [
     skills: ["RESTful APIs", "OOP", "MVC", "Agile/Scrum"],
   },
   {
-    icon: <Cpu className="w-8 h-8 mb-4 text-primary" />,
+    icon: <Languages className="w-8 h-8 mb-4 text-primary" />,
     title: "Languages",
     skills: ["English (B2 - Aptis, TOEIC)", "Vietnamese (Native)"],
   },
-]
+];
 
 export default function Skills() {
-  const refs = skillCategories.map(() => useRef(null))
+  const refs = skillCategories.map(() => useRef(null));
 
   return (
     <section id="skills" className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/20">
@@ -54,7 +54,7 @@ export default function Skills() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {skillCategories.map((category, index) => {
-            const isInView = useInView(refs[index], { once: false, amount: 0.3 })
+            const isInView = useInView(refs[index], { once: false, amount: 0.3 });
 
             return (
               <motion.div
@@ -77,10 +77,10 @@ export default function Skills() {
                   ))}
                 </div>
               </motion.div>
-            )
+            );
           })}
         </div>
       </div>
     </section>
-  )
+  );
 }
